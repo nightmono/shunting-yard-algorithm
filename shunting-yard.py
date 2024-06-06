@@ -13,7 +13,7 @@ def shunting_yard(tokens: list[str]):
     operators = []
 
     for token in tokens:
-        if token.isdigit():
+        if token.replace(".", "").replace("-", "").isdigit():
             output.append(token)
         else:
             while operators and get_precedence(operators[-1]) >= get_precedence(token):
@@ -32,8 +32,8 @@ def evaluate_postfix(expression: list[str]):
     stack = []
 
     for token in expression:
-        if token.isdigit():
-            stack.append(int(token))
+        if token.replace(".", "").replace("-", "").isdigit():
+            stack.append(float(token))
         else:
             b = stack.pop()
             a = stack.pop()
@@ -56,3 +56,9 @@ exp2 = shunting_yard(tokenizer("2 * 3 / 2 + 2"))
 
 print(evaluate_postfix(exp1))
 print(evaluate_postfix(exp2))
+
+while 1:
+    text_stream = input("Text stream: ")
+    exp = shunting_yard(tokenizer(text_stream))
+    print(exp)
+    print(evaluate_postfix(exp))
