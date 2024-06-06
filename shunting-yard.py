@@ -28,5 +28,31 @@ def shunting_yard(tokens: list[str]):
 def tokenizer(stream):
     return stream.split()
 
-print(shunting_yard(tokenizer("1 + 2 * 4")))
-print(shunting_yard(tokenizer("1 + 3 / 2 - 4")))
+def evaluate_postfix(expression: list[str]):
+    stack = []
+
+    for token in expression:
+        if token.isdigit():
+            stack.append(int(token))
+        else:
+            b = stack.pop()
+            a = stack.pop()
+
+            if token == "+":
+                result = a + b
+            elif token == "-":
+                result = a - b
+            elif token == "*":
+                result = a * b
+            elif token == "/":
+                result = a / b
+
+            stack.append(result)
+
+    return stack
+
+exp1 = shunting_yard(tokenizer("1 + 2 * 4"))
+exp2 = shunting_yard(tokenizer("2 * 3 / 2 + 2"))
+
+print(evaluate_postfix(exp1))
+print(evaluate_postfix(exp2))
