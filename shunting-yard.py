@@ -90,7 +90,7 @@ print(evaluate_postfix(exp2))
 
 while 1:
     text_stream = input("Text stream: ")
-    tokens = tokenize(text_stream)
+    tokens = tokenize(text_stream, list(functions))
     print(tokens)
     exp = shunting_yard(tokens)
     print(exp)
