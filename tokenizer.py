@@ -1,4 +1,4 @@
-def tokenize(stream, functions_list=None):
+def tokenize(stream: str, functions_list: list[str] = None):
     stream = stream.strip()
     functions_list = functions_list or []
 

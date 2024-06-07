@@ -13,10 +13,10 @@ functions = {
     "max": (max, 2)
 }
 
-def get_precedence(token):
+def get_precedence(token: str):
     return precenders.get(token, 0)
 
-def isdigit(token):
+def isdigit(token: str):
     """Custom isdigit function that supports negative and decimal numbers."""
     return token.replace(".", "").replace("-", "").isdigit()
 
