@@ -15,10 +15,17 @@ def shunting_yard(tokens: list[str]):
     for token in tokens:
         if token.replace(".", "").replace("-", "").isdigit():
             output.append(token)
-        else:
+        elif token in "+-*/":
             while operators and get_precedence(operators[-1]) >= get_precedence(token):
                 output.append(operators.pop())
             operators.append(token)
+        elif token == "(":
+            operators.append("(")
+        elif token == ")":
+            while operators and operators[-1] != "(":
+                output.append(operators.pop())
+            # Pop open bracket
+            operators.pop()
 
     while operators:
         output.append(operators.pop())
