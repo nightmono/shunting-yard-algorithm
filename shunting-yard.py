@@ -8,12 +8,16 @@ precenders = {
 def get_precedence(token):
     return precenders.get(token, 0)
 
+def isdigit(token):
+    """Custom isdigit function that supports negative and decimal numbers."""
+    return token.replace(".", "").replace("-", "").isdigit()
+
 def shunting_yard(tokens: list[str]):
     output = []
     operators = []
 
     for token in tokens:
-        if token.replace(".", "").replace("-", "").isdigit():
+        if isdigit(token):
             output.append(token)
         elif token in "+-*/":
             while operators and get_precedence(operators[-1]) >= get_precedence(token):
@@ -39,7 +43,7 @@ def evaluate_postfix(expression: list[str]):
     stack = []
 
     for token in expression:
-        if token.replace(".", "").replace("-", "").isdigit():
+        if isdigit(token):
             stack.append(float(token))
         else:
             b = stack.pop()
