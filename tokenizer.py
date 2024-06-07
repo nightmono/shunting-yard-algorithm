@@ -14,17 +14,16 @@ def tokenize(stream: str, functions_list: list[str] = None):
             while head < len(stream) and stream[head] == " ":
                 head += 1
 
+        # Numbers.
+        elif stream[current] in ".0123456789":
+            while head < len(stream) and stream[head] in ".0123456789":
+                head += 1
+            tokens.append(stream[current:head])
+
         # One character tokens.
         elif stream[current] in "+-*/(),":
             head += 1
             tokens.append(stream[current])
-
-        # Numbers.
-        elif stream[current] in "-.0123456789":
-            # Only check `-` at the beginning so 1-2 is not treated as a number.
-            while head < len(stream) and stream[head] in ".0123456789":
-                head += 1
-            tokens.append(stream[current:head])
 
         # Strings.
         elif stream[current] in "'\"":
