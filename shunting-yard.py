@@ -7,7 +7,8 @@ precenders = {
 
 # (function, amount of arguments)
 functions = {
-    "print": (print, 1)
+    "print": (print, 1),
+    "max": (max, 2)
 }
 
 def get_precedence(token):
@@ -40,6 +41,10 @@ def shunting_yard(tokens: list[str]):
             # Check if the brackets were for a function
             if operators[-1] in functions:
                 output.append(operators.pop())
+        elif token == ",":
+            # Ensures that x is pushed to stack before y in (x, y) expressions.
+            while operators and operators[-1] != "(":
+               output.append(operators.pop())
 
     while operators:
         output.append(operators.pop())
@@ -87,7 +92,12 @@ print(evaluate_postfix(exp1))
 print(evaluate_postfix(exp2))
 
 while 1:
-    text_stream = input("Text stream: ")
-    exp = shunting_yard(tokenizer(text_stream))
-    print(exp)
-    print(evaluate_postfix(exp))
+    try:
+        text_stream = input("Text stream: ")
+        exp = shunting_yard(tokenizer(text_stream))
+        print(exp)
+        print(evaluate_postfix(exp))
+    except Exception as e:
+        print(e)
+        print(text_stream)
+        print(exp)
