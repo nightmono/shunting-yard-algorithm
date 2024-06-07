@@ -1,3 +1,5 @@
+from tokenizer import tokenize
+
 precenders = {
     "+": 1,
     "-": 1,
@@ -39,7 +41,7 @@ def shunting_yard(tokens: list[str]):
             # Pop open bracket
             operators.pop()
             # Check if the brackets were for a function
-            if operators[-1] in functions:
+            if operators and operators[-1] in functions:
                 output.append(operators.pop())
         elif token == ",":
             # Ensures that x is pushed to stack before y in (x, y) expressions.
@@ -50,9 +52,6 @@ def shunting_yard(tokens: list[str]):
         output.append(operators.pop())
 
     return output
-
-def tokenizer(stream):
-    return stream.split()
 
 def evaluate_postfix(expression: list[str]):
     stack = []
@@ -85,19 +84,14 @@ def evaluate_postfix(expression: list[str]):
 
     return stack
 
-exp1 = shunting_yard(tokenizer("1 + 2 * 4"))
-exp2 = shunting_yard(tokenizer("2 * 3 / 2 + 2"))
+exp2 = shunting_yard(tokenize("(5+4) * 3"))
 
-print(evaluate_postfix(exp1))
 print(evaluate_postfix(exp2))
 
 while 1:
-    try:
-        text_stream = input("Text stream: ")
-        exp = shunting_yard(tokenizer(text_stream))
-        print(exp)
-        print(evaluate_postfix(exp))
-    except Exception as e:
-        print(e)
-        print(text_stream)
-        print(exp)
+    text_stream = input("Text stream: ")
+    tokens = tokenize(text_stream)
+    print(tokens)
+    exp = shunting_yard(tokens)
+    print(exp)
+    print(evaluate_postfix(exp))
