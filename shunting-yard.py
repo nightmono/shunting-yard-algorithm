@@ -5,6 +5,11 @@ precenders = {
     "/": 2
 }
 
+# (function, amount of arguments)
+functions = {
+    "print": (print, 1)
+}
+
 def get_precedence(token):
     return precenders.get(token, 0)
 
@@ -23,6 +28,8 @@ def shunting_yard(tokens: list[str]):
             while operators and get_precedence(operators[-1]) >= get_precedence(token):
                 output.append(operators.pop())
             operators.append(token)
+        elif token in functions:
+            operators.append(token)
         elif token == "(":
             operators.append("(")
         elif token == ")":
@@ -30,6 +37,9 @@ def shunting_yard(tokens: list[str]):
                 output.append(operators.pop())
             # Pop open bracket
             operators.pop()
+            # Check if the brackets were for a function
+            if operators[-1] in functions:
+                output.append(operators.pop())
 
     while operators:
         output.append(operators.pop())
@@ -46,19 +56,27 @@ def evaluate_postfix(expression: list[str]):
         if isdigit(token):
             stack.append(float(token))
         else:
-            b = stack.pop()
-            a = stack.pop()
+            if token in "+-*/":
+                b = stack.pop()
+                a = stack.pop()
 
-            if token == "+":
-                result = a + b
-            elif token == "-":
-                result = a - b
-            elif token == "*":
-                result = a * b
-            elif token == "/":
-                result = a / b
+                if token == "+":
+                    result = a + b
+                elif token == "-":
+                    result = a - b
+                elif token == "*":
+                    result = a * b
+                elif token == "/":
+                    result = a / b
 
-            stack.append(result)
+            elif token in functions:
+                func, num_arguments = functions[token]
+
+                arguments = [stack.pop() for _ in range(num_arguments)]
+                result = func(*arguments)
+
+            if result is not None:
+                stack.append(result)
 
     return stack
 
