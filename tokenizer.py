@@ -49,10 +49,18 @@ def tokenize(stream, functions_list=None):
             ending_index = current + 5
             error_substream = stream[starting_index:ending_index]
             error_message = f"Character `{error_substream}` at index {current} not recognised\n" +  \
-                            f"           {' '*min(current, 4)}^"
+                            f"{' '*23}{' '*min(current, 4)}^"
             raise ValueError(error_message)
-            break
 
         current = head
 
     return tokens
+
+def main():
+    while 1:
+        text_stream = input("Text stream: ")
+        tokens = tokenize(text_stream)
+        print(tokens)
+
+if __name__ == "__main__":
+    main()
