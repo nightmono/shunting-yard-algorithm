@@ -44,7 +44,7 @@ def tokenize(stream: str, functions_list: list[str] = None):
 
         # Numbers.
         elif stream[current] in "-.0123456789":
-            if tokens and tokens[-1] not in "+-*/":
+            if tokens and stream[current] == "-" and tokens[-1] not in "+-*/":
                 head = handle_one_char(stream, tokens, current)
             else:
                 head = handle_number(stream, tokens, current, head+1)
