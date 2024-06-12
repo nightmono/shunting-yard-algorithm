@@ -1,10 +1,11 @@
 from tokenizer import tokenize
 
-precenders = {
+precedences = {
     "+": 1,
     "-": 1,
     "*": 2,
-    "/": 2
+    "/": 2,
+    "^": 3
 }
 
 # (function, amount of arguments)
@@ -14,7 +15,7 @@ functions = {
 }
 
 def get_precedence(token: str):
-    return precenders.get(token, 0)
+    return precedences.get(token, 0)
 
 def isdigit(token: str):
     """Custom isdigit function that supports negative and decimal numbers."""
@@ -27,7 +28,7 @@ def shunting_yard(tokens: list[str]):
     for token in tokens:
         if isdigit(token):
             output.append(token)
-        elif token in "+-*/":
+        elif token in precedences:
             while operators and get_precedence(operators[-1]) >= get_precedence(token):
                 output.append(operators.pop())
             operators.append(token)
@@ -60,7 +61,7 @@ def evaluate_postfix(expression: list[str]):
         if isdigit(token):
             stack.append(float(token))
         else:
-            if token in "+-*/":
+            if token in precedences:
                 b = stack.pop()
                 a = stack.pop()
 
@@ -72,6 +73,8 @@ def evaluate_postfix(expression: list[str]):
                     result = a * b
                 elif token == "/":
                     result = a / b
+                elif token == "^":
+                    result = a ** b
 
             elif token in functions:
                 func, num_arguments = functions[token]
@@ -90,7 +93,7 @@ print(evaluate_postfix(exp2))
 
 while 1:
     text_stream = input("Text stream: ")
-    tokens = tokenize(text_stream, list(functions))
+    tokens = tokenize(text_stream, str(precedences)+"(),", list(functions))
     print(tokens)
     exp = shunting_yard(tokens)
     print(exp)

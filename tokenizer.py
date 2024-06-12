@@ -27,7 +27,8 @@ def handle_func(stream, tokens, funcs, current, head):
     tokens.append(stream[current:head])
     return head
 
-def tokenize(stream: str, functions_list: list[str] = None):
+def tokenize(stream: str, one_character_tokens_string="+-*/(),",
+             functions_list: list[str] = None):
     stream = stream.strip()
     functions_list = functions_list or []
 
@@ -50,7 +51,7 @@ def tokenize(stream: str, functions_list: list[str] = None):
                 head = handle_number(stream, tokens, current, head+1)
 
         # One character tokens.
-        elif stream[current] in "+-*/(),":
+        elif stream[current] in one_character_tokens_string:
             head = handle_one_char(stream, tokens, current)
 
         # Strings.
@@ -58,7 +59,8 @@ def tokenize(stream: str, functions_list: list[str] = None):
             head = handle_string(stream, tokens, current, head+1)
 
         # Functions.
-        elif funcs := ([func for func in functions_list if func in stream[current:]]):
+        elif funcs := ([func for func in functions_list
+                        if func in stream[current:]]):
             head = handle_func(stream, tokens, funcs, current, head)
 
         # Unrecognised character error handling.
